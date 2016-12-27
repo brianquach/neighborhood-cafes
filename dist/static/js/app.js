@@ -1,0 +1,6 @@
+var mapController = function () {
+
+  return {
+    
+  };
+}

@@ -1,0 +1,15 @@
+/* GENERAL */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* MAP */
+.map {
+  height: 100%;
+}
+
+/* LIST VIEW */
+
+/* INFO PANEL */

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Neighborhood Map</title>
+    <link href="static/css/style.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <section class="place-list"></section>
+    <section id="map" class="map"></section>
+    <section class="place-panel"></section>
+
+    <script>
+      var mapInfo = {
+        map: null,
+        lat: 34.052235,
+        lng: -118.243683
+      };
+      function initMap() {
+        mapInfo.map = new google.maps.Map(document.getElementById('map'), {
+          center: {
+            lat: mapInfo.lat,
+            lng: mapInfo.lng
+          },
+          zoom: 10
+        });
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHWBmrFqFmvke2NWG_ueETDnYeYmlyHWM&callback=initMap" async defer></script>
+    <script src="static/js/app.js" defer></script>
+  </body>
+</html>
