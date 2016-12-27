@@ -1,0 +1,20 @@
+{
+  "name": "neighborhood-api",
+  "homepage": "https://github.com/brianquach/neighborhood-api",
+  "authors": [
+    "Brian Quach <13rianquach@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "knockout": "^3.4.1"
+  }
+}
