@@ -11,5 +11,8 @@ html, body {
 }
 
 /* LIST VIEW */
+.place-list {
+  position: fixed;
+}
 
 /* INFO PANEL */

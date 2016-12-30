@@ -12,24 +12,24 @@
     <section class="place-panel"></section>
 
     <script>
-      var mapInfo = {
-        map: null,
+      var map;
+      var mapState = {
         lat: 34.052235,
         lng: -118.243683
       };
       function initMap() {
-        mapInfo.map = new google.maps.Map(document.getElementById('map'), {
+        map = new google.maps.Map(document.getElementById('map'), {
           center: {
-            lat: mapInfo.lat,
-            lng: mapInfo.lng
+            lat: mapState.lat,
+            lng: mapState.lng
           },
-          zoom: 10
+          zoom: 15
         });
       }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHWBmrFqFmvke2NWG_ueETDnYeYmlyHWM&callback=initMap" async defer></script>
-    <script src="static/js/knockout.js" async defer></script>
-    <script src="static/js/jquery.min.js" async defer></script>
+    <script src="static/js/knockout.js" defer></script>
+    <script src="static/js/jquery.min.js" defer></script>
     <script src="static/js/app.js" defer></script>
   </body>
 </html>
