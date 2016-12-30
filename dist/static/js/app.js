@@ -1,4 +1,4 @@
-var zomatoModel = (function($) {
+var restaurantModel = (function($) {
   'use strict'
 
   var headers = {
@@ -86,15 +86,13 @@ var mapController = (function($) {
   };
 })(jQuery);
 
-var cafeViewModel = (function ($) {
+var cafeModule = (function ($) {
   'use strict'
 
-  function createList() {
+  var cafeViewModel = new CafeViewModel();
 
-  }
-  
   function init() {
-    $.when(zomatoModel.getCafes()).then(
+    $.when(restaurantModel.getRestaurants()).then(
       function (restaurants) {
         var location, lat, lng, marker;
         var markers = [];
@@ -117,15 +115,29 @@ var cafeViewModel = (function ($) {
           }
         });
         map.fitBounds(bounds);
-        zomatoModel.saveRestaurants(restaurants);
+        restaurantModel.saveRestaurants(restaurants);
         mapModel.saveMarkers(markers);
+
+        createList();
       }
     );
   }
+
+  function CafeViewModel() {
+    this.cafes = function() {
+
+    };
+  }
+
+  function createList() {
+
+  }
+
+  ko.applyBindings(cafeViewModel);
 
   return {
     init: init
   };
 })(jQuery);
 
-cafeViewModel.init();
+cafeModule.init();
