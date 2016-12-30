@@ -10,7 +10,7 @@
     <section class="place-list">
       <h2>Cafes:</h2>
       <ul data-bind="foreach: restaurants">
-        <li>
+        <li data-bind="click: $parent.restaurantClick">
           <span data-bind="text: restaurant.name"></span>
         </li>
       </ul>

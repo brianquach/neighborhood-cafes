@@ -48,24 +48,6 @@ var restaurantModel = (function($) {
   }
 })(jQuery);
 
-var mapModel = (function() {
-  'use strict'
-
-  var markers = ko.observableArray();
-
-  function getMarkers() {
-    return markers;
-  }
-
-  function saveMarkers(unsavedMarkers) {
-    markers = ko.observableArray(unsavedMarkers);
-  }
-
-  return {
-    saveMarkers: saveMarkers
-  }
-})();
-
 var mapController = (function($) {
   'use strict'
 
@@ -91,18 +73,21 @@ var cafeModule = (function ($) {
 
   var cafeViewModel = new CafeViewModel();
   function CafeViewModel() {
-    this.restaurants = ko.observableArray();
+    var self = this;
+    self.restaurants = ko.observableArray();
+    self.restaurantClick = function(restaurantObj) {
+      google.maps.event.trigger(restaurantObj.marker, 'click');
+    };
   }
 
   function init() {
     $.when(restaurantModel.getRestaurants()).then(
       function (restaurants) {
         var location, lat, lng, marker;
-        var markers = [];
         var bounds = map.getBounds();
 
-        restaurants.forEach(function (o) {
-          location = o.restaurant.location;
+        restaurants.forEach(function (restaurantObj) {
+          location = restaurantObj.restaurant.location;
           lat = location.latitude;
           lng = location.longitude;
           if (typeof lat !== 'Number') {
@@ -113,14 +98,13 @@ var cafeModule = (function ($) {
           }
           if (lat !== 0 && lng !== 0) {
             marker = mapController.addMarker(lat, lng);
-            markers.push(marker);
             bounds.extend(marker.getPosition());
+            restaurantObj.marker = marker;
           }
         });
         map.fitBounds(bounds);
         restaurantModel.saveRestaurants(restaurants);
         cafeViewModel.restaurants = ko.observableArray(restaurants);
-        mapModel.saveMarkers(markers);
 
         ko.applyBindings(cafeViewModel);
       }
