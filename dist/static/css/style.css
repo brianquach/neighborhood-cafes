@@ -12,7 +12,16 @@ html, body {
 
 /* LIST VIEW */
 .place-list {
+  color: #ddd;
   position: fixed;
+  background-color: #414a59;
+  width: 20vw;
+  height: 100vh;
+  z-index: 1;
+}
+
+.place-list a {
+  color: #ddd;
 }
 
 /* INFO PANEL */

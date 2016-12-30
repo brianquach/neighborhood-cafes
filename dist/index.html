@@ -7,7 +7,11 @@
   </head>
 
   <body>
-    <section class="place-list"></section>
+    <section class="place-list">
+      <section>
+        Cafe search powered by <a href="https://developers.zomato.com/">Zomato</a>
+      </section>
+    </section>
     <section id="map" class="map"></section>
     <section class="place-panel"></section>
 
@@ -23,7 +27,8 @@
             lat: mapState.lat,
             lng: mapState.lng
           },
-          zoom: 15
+          zoom: 15,
+          disableDefaultUI: true
         });
       }
     </script>
