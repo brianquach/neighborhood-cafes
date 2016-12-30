@@ -5,7 +5,15 @@ var zomatoModel = (function($) {
     "user-key": '3dcc424e9b2d38abdfd2d55ae0c36d06'
   };
 
-  function getCafes() {
+  var restaurants;
+
+  function getRestaurants() {
+    var d = $.Deferred();
+
+    if (restaurants) {
+      return d.resolve(restaurants);
+    }
+
     var data = $.param({
       lat: mapState.lat,
       lon: mapState.lng,
@@ -15,56 +23,50 @@ var zomatoModel = (function($) {
     });
     var url = 'https://developers.zomato.com/api/v2.1/search';
 
-    return $.ajax({
+    $.ajax({
       url: url,
       data: data,
       headers: headers
+    }).done(function(data) {
+      var restaurants = data.restaurants;
+      d.resolve(restaurants);
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      // TODO: Handle failures
+      // console.log(jqXHR, textStatus, errorThrown);
     });
+
+    return d;
+  }
+
+  function saveRestaurants(unsavedRestaurants) {
+    restaurants = unsavedRestaurants;
   }
 
   return {
-    getCafes: getCafes
+    getRestaurants: getRestaurants,
+    saveRestaurants: saveRestaurants
   }
 })(jQuery);
 
-var zomatoController = (function ($) {
+var mapModel = (function() {
   'use strict'
 
-  function init() {
-    zomatoModel.getCafes()
-      .done(function (data) {
-        var location, lat, lng, marker;
-        var bounds = map.getBounds();
-        var restaurants = data.restaurants;
+  var markers = ko.observableArray();
 
-        restaurants.forEach(function (r) {
-          location = r.restaurant.location;
-          lat = location.latitude;
-          lng = location.longitude;
-          if (typeof lat !== 'Number') {
-            lat = Number(lat);
-          }
-          if (typeof lng !== 'Number') {
-            lng = Number(lng);
-          }
-          if (lat !== 0 && lng !== 0) {
-            marker = mapAPIController.addMarker(lat, lng);
-            bounds.extend(marker.getPosition());
-          }
-        });
-        map.fitBounds(bounds);
-      }).fail(function (jqXHR, textStatus, errorThrown) {
-        // TODO: Handle failures
-        // console.log(jqXHR, textStatus, errorThrown);
-      });
+  function getMarkers() {
+    return markers;
+  }
+
+  function saveMarkers(unsavedMarkers) {
+    markers = ko.observableArray(unsavedMarkers);
   }
 
   return {
-    init: init
-  };
-})(jQuery);
+    saveMarkers: saveMarkers
+  }
+})();
 
-var mapAPIController = (function($) {
+var mapController = (function($) {
   'use strict'
 
   function addMarker(lat, lng) {
@@ -84,4 +86,46 @@ var mapAPIController = (function($) {
   };
 })(jQuery);
 
-zomatoController.init();
+var cafeViewModel = (function ($) {
+  'use strict'
+
+  function createList() {
+
+  }
+  
+  function init() {
+    $.when(zomatoModel.getCafes()).then(
+      function (restaurants) {
+        var location, lat, lng, marker;
+        var markers = [];
+        var bounds = map.getBounds();
+
+        restaurants.forEach(function (o) {
+          location = o.restaurant.location;
+          lat = location.latitude;
+          lng = location.longitude;
+          if (typeof lat !== 'Number') {
+            lat = Number(lat);
+          }
+          if (typeof lng !== 'Number') {
+            lng = Number(lng);
+          }
+          if (lat !== 0 && lng !== 0) {
+            marker = mapController.addMarker(lat, lng);
+            markers.push(marker);
+            bounds.extend(marker.getPosition());
+          }
+        });
+        map.fitBounds(bounds);
+        zomatoModel.saveRestaurants(restaurants);
+        mapModel.saveMarkers(markers);
+      }
+    );
+  }
+
+  return {
+    init: init
+  };
+})(jQuery);
+
+cafeViewModel.init();
