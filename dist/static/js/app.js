@@ -69,20 +69,37 @@ var mapModel = (function() {
 var mapController = (function($) {
   'use strict'
 
-  function addMarker(lat, lng) {
+  function animateMarker(marker, timeout) {
+    timeout = timeout || 1400;
+    marker.setAnimation(google.maps.Animation.BOUNCE);
+    window.setTimeout(function() {
+      marker.setAnimation(null);
+    }, timeout);
+  }
+
+  function addMarker(lat, lng, name) {
     var position = {
       lat: lat,
       lng: lng
     };
     var marker = new google.maps.Marker({
       position: position,
-      map: map
+      map: map,
+      title: name
     });
+
+    marker.addListener('click', function() {
+      animateMarker(marker);
+      map.setZoom(15);
+      map.panTo(marker.getPosition());
+    });
+
     return marker;
   }
 
   return {
-    addMarker: addMarker
+    addMarker: addMarker,
+    animateMarker: animateMarker
   };
 })(jQuery);
 
@@ -97,12 +114,14 @@ var cafeModule = (function ($) {
   function init() {
     $.when(restaurantModel.getRestaurants()).then(
       function (restaurants) {
-        var location, lat, lng, marker;
+        var restaurant, location, lat, lng, marker;
         var markers = [];
         var bounds = map.getBounds();
 
         restaurants.forEach(function (o) {
-          location = o.restaurant.location;
+          restaurant = o.restaurant;
+          console.log(restaurant);
+          location = restaurant.location;
           lat = location.latitude;
           lng = location.longitude;
           if (typeof lat !== 'Number') {
@@ -112,7 +131,7 @@ var cafeModule = (function ($) {
             lng = Number(lng);
           }
           if (lat !== 0 && lng !== 0) {
-            marker = mapController.addMarker(lat, lng);
+            marker = mapController.addMarker(lat, lng, restaurant.name);
             markers.push(marker);
             bounds.extend(marker.getPosition());
           }
