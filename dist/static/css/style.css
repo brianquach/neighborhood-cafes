@@ -8,16 +8,15 @@ html, body {
 /* MAP */
 .map {
   height: 100%;
+  width: 80%;
 }
 
 /* LIST VIEW */
 .place-list {
   color: #ddd;
-  position: fixed;
   background-color: #414a59;
-  width: 20vw;
-  height: 100vh;
-  z-index: 1;
+  width: 20%;
+  height: 100%;
   overflow-y: scroll;
 }
 
