@@ -90,6 +90,9 @@ var cafeModule = (function ($) {
   'use strict'
 
   var cafeViewModel = new CafeViewModel();
+  function CafeViewModel() {
+    this.restaurants = ko.observableArray();
+  }
 
   function init() {
     $.when(restaurantModel.getRestaurants()).then(
@@ -116,24 +119,13 @@ var cafeModule = (function ($) {
         });
         map.fitBounds(bounds);
         restaurantModel.saveRestaurants(restaurants);
+        cafeViewModel.restaurants = ko.observableArray(restaurants);
         mapModel.saveMarkers(markers);
 
-        createList();
+        ko.applyBindings(cafeViewModel);
       }
     );
   }
-
-  function CafeViewModel() {
-    this.cafes = function() {
-
-    };
-  }
-
-  function createList() {
-
-  }
-
-  ko.applyBindings(cafeViewModel);
 
   return {
     init: init

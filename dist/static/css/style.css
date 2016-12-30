@@ -18,10 +18,37 @@ html, body {
   width: 20vw;
   height: 100vh;
   z-index: 1;
+  overflow-y: scroll;
 }
 
 .place-list a {
   color: #ddd;
+}
+
+.place-list h2 {
+  padding: 5px;
+}
+
+.place-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.place-list li {
+  padding: 10px 5px;
+  border-style: dashed;
+  border-color: #ddd;
+  border-width: 1px 0;
+  cursor: pointer;
+}
+
+.place-list li:hover {
+  background-color: rgba(40, 62, 175, 0.65);
+}
+
+.place-list footer {
+  margin: 25px 2px 5px;
 }
 
 /* INFO PANEL */

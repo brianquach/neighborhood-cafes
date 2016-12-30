@@ -8,9 +8,15 @@
 
   <body>
     <section class="place-list">
-      <section>
+      <h2>Cafes:</h2>
+      <ul data-bind="foreach: restaurants">
+        <li>
+          <span data-bind="text: restaurant.name"></span>
+        </li>
+      </ul>
+      <footer>
         Cafe search powered by <a href="https://developers.zomato.com/">Zomato</a>
-      </section>
+      </footer>
     </section>
     <section id="map" class="map"></section>
     <section class="place-panel"></section>
