@@ -8,7 +8,8 @@ html, body {
 /* MAP */
 .map {
   height: 100%;
-  width: 80%;
+  width: 79%;
+  display: inline-block;
 }
 
 /* LIST VIEW */
@@ -18,6 +19,7 @@ html, body {
   width: 20%;
   height: 100%;
   overflow-y: scroll;
+  display: inline-block;
 }
 
 .place-list a {
