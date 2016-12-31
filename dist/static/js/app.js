@@ -90,7 +90,7 @@ var mapController = (function($) {
 
     marker.addListener('click', function() {
       animateMarker(marker);
-      map.setZoom(15);
+      map.setZoom(16);
       map.panTo(marker.getPosition());
     });
 
@@ -115,6 +115,9 @@ var cafeModule = (function ($) {
         self.isMobileListView(false);
       }
       google.maps.event.trigger(restaurantObj.marker, 'click');
+    };
+    self.restaurantHover = function(restaurantObj) {
+      mapController.animateMarker(restaurantObj.marker);
     };
 
     self.query = ko.observable();
