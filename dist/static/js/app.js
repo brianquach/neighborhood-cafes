@@ -116,9 +116,6 @@ var cafeModule = (function ($) {
       }
       google.maps.event.trigger(restaurantObj.marker, 'click');
     };
-    self.restaurantHover = function(restaurantObj) {
-      mapController.animateMarker(restaurantObj.marker);
-    };
 
     self.query = ko.observable();
     self.query.extend({ rateLimit: 200 }); // Imitate debouncing

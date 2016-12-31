@@ -19,7 +19,7 @@
       </div>
       <h2>Cafes:</h2>
       <ul data-bind="foreach: restaurants">
-        <li data-bind="click: $parent.restaurantClick, visible: restaurant.show, event: { mouseover: $parent.restaurantHover }">
+        <li data-bind="click: $parent.restaurantClick, visible: restaurant.show">
           <span data-bind="text: restaurant.name"></span>
         </li>
       </ul>
