@@ -159,8 +159,8 @@ var mapController = (function($) {
         '<label>Reviews:</label><br>' +
         '<div class="info-window__reviews">' +
         '<img src="static/images/load.svg" height="30" width="30" alt="loading">' +
-        ' loading...</div>' +
-        '</div>';
+        ' loading...</div><br>' +
+        '<small>Powered by <a href="https://developers.zomato.com/">Zomato</a></small></div>';
       infoWindow.setContent(contentString);
       infoWindow.open(map, marker);
 
