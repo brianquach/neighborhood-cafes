@@ -93,8 +93,12 @@ var cafeModule = (function ($) {
     var self = this;
     self.restaurants = ko.observableArray();
     self.restaurantClick = function(restaurantObj) {
+      if (self.isMobileListView()) {
+        self.isMobileListView(false);
+      }
       google.maps.event.trigger(restaurantObj.marker, 'click');
     };
+
     self.query = ko.observable();
     self.query.extend({ rateLimit: 200 }); // Imitate debouncing
     self.query.subscribe(function(q) {
@@ -114,6 +118,14 @@ var cafeModule = (function ($) {
         }
       };
     });
+
+    self.isMobileListView = ko.observable(false);
+    self.mobileListView = function() {
+      self.isMobileListView(true);
+    };
+    self.mobileMapView = function() {
+      self.isMobileListView(false);
+    };
   }
 
   function init() {

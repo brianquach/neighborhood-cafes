@@ -101,7 +101,15 @@ body {
 
 @media screen and (max-width: 500px) {
   .restaurant-list {
+    position: absolute;
+    top: 60px;
+    width: 100%;
+    z-index: 1;
     display: none;
+  }
+
+  .show {
+    display: block;
   }
 
   .map {
