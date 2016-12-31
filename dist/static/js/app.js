@@ -38,13 +38,37 @@ var restaurantModel = (function($) {
     return d;
   }
 
+  function getRestaurantReviews(restaurantId) {
+    var d = $.Deferred();
+
+    var data = $.param({
+      res_id: restaurantId,
+    });
+    var url = 'https://developers.zomato.com/api/v2.1/reviews';
+
+    $.ajax({
+      url: url,
+      data: data,
+      headers: headers
+    }).done(function(data) {
+      var reviews = data.user_reviews;
+      d.resolve(reviews);
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      // TODO: Handle failures
+      // console.log(jqXHR, textStatus, errorThrown);
+    });
+
+    return d;
+  }
+
   function saveRestaurants(unsavedRestaurants) {
     restaurants = unsavedRestaurants;
   }
 
   return {
     getRestaurants: getRestaurants,
-    saveRestaurants: saveRestaurants
+    saveRestaurants: saveRestaurants,
+    getRestaurantReviews: getRestaurantReviews
   }
 })(jQuery);
 
@@ -78,7 +102,15 @@ var mapController = (function($) {
     }, timeout);
   }
 
-  function addMarker(lat, lng, name) {
+  function getRestaurantReviews(restaurantId) {
+    $.when(restaurantModel.getRestaurantReviews(restaurantId)).then(
+      function (reviews) {
+        // console.log('2', reviews);
+      }
+    );
+  }
+
+  function addMarker(lat, lng, name, restaurantId) {
     var position = {
       lat: lat,
       lng: lng
@@ -89,6 +121,7 @@ var mapController = (function($) {
     });
 
     marker.addListener('click', function() {
+      getRestaurantReviews(restaurantId);
       animateMarker(marker);
       map.setZoom(16);
       map.panTo(marker.getPosition());
@@ -173,7 +206,8 @@ var cafeModule = (function ($) {
             lng = Number(lng);
           }
           if (lat !== 0 && lng !== 0) {
-            marker = mapController.addMarker(lat, lng, restaurant.name);
+            marker = mapController.addMarker(
+              lat, lng, restaurant.name, restaurant.id);
             markers.push(marker);
             bounds.extend(marker.getPosition());
             restaurantObj.marker = marker;
