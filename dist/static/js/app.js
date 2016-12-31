@@ -95,6 +95,22 @@ var cafeModule = (function ($) {
     self.restaurantClick = function(restaurantObj) {
       google.maps.event.trigger(restaurantObj.marker, 'click');
     };
+    self.query = ko.observable();
+    self.query.extend({ rateLimit: 200 }); // Imitate debouncing
+    self.query.subscribe(function(q) {
+      var name, i, len, restaurantObj, restaurant;
+      var re = new RegExp(q, 'gi');
+      for (i = 0, len = self.restaurants().length; i < len; i++) {
+        restaurantObj = self.restaurants()[i];
+        restaurant = restaurantObj.restaurant;
+        name = restaurantObj.restaurant.name;
+        if (name.match(re)) {
+          restaurant.show(true);
+        } else {
+          restaurant.show(false);
+        }
+      };
+    });
   }
 
   function init() {
@@ -103,7 +119,7 @@ var cafeModule = (function ($) {
         var restaurant, location, lat, lng, marker;
         var bounds = map.getBounds();
 
-        restaurants.forEach(function (restaurantObj) {
+        restaurants.forEach(function (restaurantObj, idx) {
           restaurant = restaurantObj.restaurant;
           location = restaurant.location;
           lat = location.latitude;
@@ -118,11 +134,13 @@ var cafeModule = (function ($) {
             marker = mapController.addMarker(lat, lng, restaurant.name);
             bounds.extend(marker.getPosition());
             restaurantObj.marker = marker;
+            restaurant.show = ko.observable(true);
+            cafeViewModel.restaurants.push(restaurantObj);
           }
         });
+
         map.fitBounds(bounds);
         restaurantModel.saveRestaurants(restaurants);
-        cafeViewModel.restaurants = ko.observableArray(restaurants);
 
         ko.applyBindings(cafeViewModel);
       }

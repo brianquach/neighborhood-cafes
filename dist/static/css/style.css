@@ -3,6 +3,12 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
 }
 
 /* MAP */
@@ -13,6 +19,17 @@ html, body {
 }
 
 /* LIST VIEW */
+.filter-wrapper {
+  padding: 5px;
+}
+
+.filter-box {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+}
+
 .place-list {
   color: #ddd;
   background-color: #414a59;
@@ -28,6 +45,7 @@ html, body {
 
 .place-list h2 {
   padding: 5px;
+  margin: 0;
 }
 
 .place-list ul {
