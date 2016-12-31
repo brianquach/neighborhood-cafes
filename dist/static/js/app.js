@@ -154,5 +154,3 @@ var cafeModule = (function ($) {
     init: init
   };
 })(jQuery);
-
-cafeModule.init();

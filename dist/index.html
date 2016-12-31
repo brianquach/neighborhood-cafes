@@ -24,6 +24,9 @@
     </section>
     <section id="map" class="map"></section>
 
+    <script src="static/js/knockout.js" defer></script>
+    <script src="static/js/jquery.min.js" defer></script>
+    <script src="static/js/app.js" defer></script>
     <script>
       var map;
       var mapState = {
@@ -39,11 +42,9 @@
           zoom: 15,
           zoomControl: true
         });
+        cafeModule.init();
       }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHWBmrFqFmvke2NWG_ueETDnYeYmlyHWM&callback=initMap" async defer></script>
-    <script src="static/js/knockout.js" defer></script>
-    <script src="static/js/jquery.min.js" defer></script>
-    <script src="static/js/app.js" defer></script>
   </body>
 </html>
