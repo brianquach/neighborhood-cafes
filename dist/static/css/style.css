@@ -7,54 +7,77 @@ html, body {
   font-size: 16px;
 }
 
+body {
+  display: flex;
+}
+
 *, *:before, *:after {
   box-sizing: inherit;
+}
+
+/* MOBILE MENU */
+.mobile-nav {
+  position: fixed;
+  width: 100%;
+  height: 60px;
+  background-color: #414a59;
+  display: none;
+  z-index: 1;
+}
+
+.mobile-nav__button {
+  width: 100%;
+  font-weight: bold;
+  border: 1px solid #000;
+  font-size: 24px;
+  background: inherit;
 }
 
 /* MAP */
 .map {
   height: 100%;
-  width: 79%;
+  width: 75%;
   display: inline-block;
 }
 
 /* LIST VIEW */
-.filter-wrapper {
+.filter {
+  font-size: 20px;
   padding: 5px;
 }
 
-.filter-box {
+.filter__box {
   display: block;
   width: 100%;
   padding: 8px;
   font-size: 14px;
 }
 
-.place-list {
+.restaurant-list {
   color: #ddd;
   background-color: #414a59;
-  width: 20%;
+  width: 25%;
   height: 100%;
   overflow-y: scroll;
   display: inline-block;
 }
 
-.place-list a {
+.restaurant-list a {
   color: #ddd;
 }
 
-.place-list h2 {
+.restaurant-list h2 {
   padding: 5px;
   margin: 0;
 }
 
-.place-list ul {
+.restaurant-list ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.place-list li {
+.restaurant-list li {
   padding: 10px 5px;
   border-style: dashed;
   border-color: #ddd;
@@ -62,12 +85,31 @@ html, body {
   cursor: pointer;
 }
 
-.place-list li:hover {
+.restaurant-list li:hover {
   background-color: rgba(40, 62, 175, 0.65);
 }
 
-.place-list footer {
+.restaurant-list footer {
   margin: 25px 2px 5px;
 }
 
-/* INFO PANEL */
+@media screen and (max-width: 750px) {
+  .restaurant-list {
+    width: 40%;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .restaurant-list {
+    display: none;
+  }
+
+  .map {
+    margin-top: 60px;
+    width: 100%;
+  }
+
+  .mobile-nav {
+    display: flex;
+  }
+}

@@ -7,10 +7,15 @@
   </head>
 
   <body>
-    <section class="place-list">
-      <div class="filter-wrapper">
+    <div class="mobile-nav">
+      <button class="mobile-nav__button">List View</button>
+      <button class="mobile-nav__button">Map View</button>
+    </div>
+
+    <section class="restaurant-list">
+      <div class="filter">
         Filter by name:
-        <input type="text" class="filter-box" data-bind="textInput: query">
+        <input type="text" class="filter__box" data-bind="textInput: query">
       </div>
       <h2>Cafes:</h2>
       <ul data-bind="foreach: restaurants">
