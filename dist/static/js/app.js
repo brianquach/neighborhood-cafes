@@ -76,6 +76,7 @@ var mapModel = (function($) {
   'use strict'
 
   var markerCluster;
+  var infoWindow;
 
   function getMarkerCluster() {
     return markerCluster;
@@ -85,9 +86,17 @@ var mapModel = (function($) {
     markerCluster = unsavedMarkerCluster;
   }
 
+  function getInfoWindow() {
+    if (!infoWindow) {
+      infoWindow = new google.maps.InfoWindow();
+    }
+    return infoWindow;
+  }
+
   return {
     getMarkerCluster: getMarkerCluster,
-    saveMarkerCluster: saveMarkerCluster
+    saveMarkerCluster: saveMarkerCluster,
+    getInfoWindow: getInfoWindow
   }
 })();
 
@@ -102,29 +111,63 @@ var mapController = (function($) {
     }, timeout);
   }
 
-  function getRestaurantReviews(restaurantId) {
+  function loadInfoWindowContent(restaurantId, infoWindow) {
     $.when(restaurantModel.getRestaurantReviews(restaurantId)).then(
       function (reviews) {
-        // console.log('2', reviews);
+        var contentString = '';
+        var $content = $(infoWindow.getContent());
+        var $reviews = $content.find('.info-window__reviews');
+        if (reviews.length) {
+          var reviewString = '';
+          var review = reviews[0].review;
+          reviewString = '<strong>Score</strong>: ' +
+            '<small style="color: #' + review.rating_color + ';">' + review.rating +
+            '</small><br><strong>Date</strong>: ' + review.review_time_friendly +
+            '<p>' + review.review_text + '</p>';
+          $reviews.html(reviewString);
+        } else {
+          $reviews.replaceWith('<span>No Reviews</span>');
+        }
+        contentString = '<div class="info-window">' +
+          $content.html() +
+          '</div>';
+        infoWindow.setContent(contentString);
       }
     );
   }
 
-  function addMarker(lat, lng, name, restaurantId) {
+  function addMarker(lat, lng, restaurant) {
     var position = {
       lat: lat,
       lng: lng
     };
+    var name = restaurant.name;
+    var restaurantId = restaurant.id;
     var marker = new google.maps.Marker({
       position: position,
       title: name
     });
 
     marker.addListener('click', function() {
-      getRestaurantReviews(restaurantId);
+      var infoWindow = mapModel.getInfoWindow();
+      var contentString = '<div class="info-window">' +
+        '<h3>' + name + '</h3>' +
+        '<label>Cost:</label> ' +
+        '<small class="info-window__currency">' + restaurant.currency + '</small><br>' +
+        '<label>Address:</label> ' +
+        '<p>' + restaurant.location.address + '</p>' +
+        '<label>Reviews:</label><br>' +
+        '<div class="info-window__reviews">' +
+        '<img src="static/images/load.svg" height="30" width="30" alt="loading">' +
+        ' loading...</div>' +
+        '</div>';
+      infoWindow.setContent(contentString);
+      infoWindow.open(map, marker);
+
+      loadInfoWindowContent(restaurantId, infoWindow);
       animateMarker(marker);
+      map.setCenter(marker.getPosition());
       map.setZoom(16);
-      map.panTo(marker.getPosition());
     });
 
     return marker;
@@ -185,6 +228,11 @@ var cafeModule = (function ($) {
   }
 
   function init() {
+    loadRestaurants();
+    ko.applyBindings(cafeViewModel);
+  }
+
+  function loadRestaurants() {
     $.when(restaurantModel.getRestaurants()).then(
       function (restaurants) {
         var restaurant, location, lat, lng, marker;
@@ -204,7 +252,7 @@ var cafeModule = (function ($) {
           }
           if (lat !== 0 && lng !== 0) {
             marker = mapController.addMarker(
-              lat, lng, restaurant.name, restaurant.id);
+              lat, lng, restaurant);
             markers.push(marker);
             bounds.extend(marker.getPosition());
             restaurantObj.marker = marker;
@@ -221,8 +269,6 @@ var cafeModule = (function ($) {
         map.fitBounds(bounds);
         mapModel.saveMarkerCluster(markerCluster);
         restaurantModel.saveRestaurants(restaurants);
-
-        ko.applyBindings(cafeViewModel);
       }
     );
   }

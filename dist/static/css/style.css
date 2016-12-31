@@ -40,6 +40,26 @@ body {
   display: inline-block;
 }
 
+.info-window h3 {
+  font-size: 22px;
+  margin-bottom: 5px;
+}
+
+.info-window p {
+  margin: 0;
+}
+
+.info-window label {
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 5px;
+  display: inline-block;
+}
+
+.info-window__currency {
+  color: green;
+}
+
 /* LIST VIEW */
 .filter {
   font-size: 20px;
