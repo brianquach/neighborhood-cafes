@@ -8,9 +8,13 @@
 
   <body>
     <section class="place-list">
+      <div class="filter-wrapper">
+        Filter by name:
+        <input type="text" class="filter-box" data-bind="textInput: query">
+      </div>
       <h2>Cafes:</h2>
       <ul data-bind="foreach: restaurants">
-        <li data-bind="click: $parent.restaurantClick">
+        <li data-bind="click: $parent.restaurantClick, visible: restaurant.show">
           <span data-bind="text: restaurant.name"></span>
         </li>
       </ul>
@@ -19,7 +23,6 @@
       </footer>
     </section>
     <section id="map" class="map"></section>
-    <section class="place-panel"></section>
 
     <script>
       var map;
