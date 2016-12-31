@@ -48,6 +48,25 @@ var restaurantModel = (function($) {
   }
 })(jQuery);
 
+var mapModel = (function($) {
+  'use strict'
+
+  var markerCluster;
+
+  function getMarkerCluster() {
+    return markerCluster;
+  }
+
+  function saveMarkerCluster(unsavedMarkerCluster) {
+    markerCluster = unsavedMarkerCluster;
+  }
+
+  return {
+    getMarkerCluster: getMarkerCluster,
+    saveMarkerCluster: saveMarkerCluster
+  }
+})();
+
 var mapController = (function($) {
   'use strict'
 
@@ -66,7 +85,6 @@ var mapController = (function($) {
     };
     var marker = new google.maps.Marker({
       position: position,
-      map: map,
       title: name
     });
 
@@ -104,6 +122,10 @@ var cafeModule = (function ($) {
     self.query.subscribe(function(q) {
       var name, i, len, restaurantObj, restaurant, marker;
       var re = new RegExp(q, 'gi');
+
+      var markerCluster = mapModel.getMarkerCluster();
+      markerCluster.clearMarkers();
+
       for (i = 0, len = self.restaurants().length; i < len; i++) {
         restaurantObj = self.restaurants()[i];
         restaurant = restaurantObj.restaurant;
@@ -111,6 +133,7 @@ var cafeModule = (function ($) {
         name = restaurantObj.restaurant.name;
         if (name.match(re)) {
           marker.setVisible(true);
+          markerCluster.addMarker(marker);
           restaurant.show(true);
         } else {
           marker.setVisible(false);
@@ -133,6 +156,7 @@ var cafeModule = (function ($) {
       function (restaurants) {
         var restaurant, location, lat, lng, marker;
         var bounds = map.getBounds();
+        var markers = [];
 
         restaurants.forEach(function (restaurantObj, idx) {
           restaurant = restaurantObj.restaurant;
@@ -147,6 +171,7 @@ var cafeModule = (function ($) {
           }
           if (lat !== 0 && lng !== 0) {
             marker = mapController.addMarker(lat, lng, restaurant.name);
+            markers.push(marker);
             bounds.extend(marker.getPosition());
             restaurantObj.marker = marker;
             restaurant.show = ko.observable(true);
@@ -154,7 +179,13 @@ var cafeModule = (function ($) {
           }
         });
 
+        var markerCluster = new MarkerClusterer(
+          map,
+          markers,
+          {imagePath: './static/images/m'}
+        );
         map.fitBounds(bounds);
+        mapModel.saveMarkerCluster(markerCluster);
         restaurantModel.saveRestaurants(restaurants);
 
         ko.applyBindings(cafeViewModel);
@@ -166,3 +197,7 @@ var cafeModule = (function ($) {
     init: init
   };
 })(jQuery);
+
+$(document).ready(function() {
+  cafeModule.init();
+});
