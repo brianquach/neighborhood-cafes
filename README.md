@@ -18,7 +18,14 @@ Grab code source:
 * Use your favorite browser to open `index.html`.
 
 *Developers (optional)*:
-To run project's build process follow the following instructions:
+This project was built with the aid of [Bower](https://bower.io/) and [Gulp](http://gulpjs.com/).
+To grab the required 3rd-party frameworks, follow the instructions:
+* Install [Bower](https://bower.io/#install-bower).
+* Navigate to project's root folder.
+* Run `bower install`
+* Frameworks should be under `./bower_components`
+
+To run project's build process, follow the following instructions:
 * Install [Gulp](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md).
 * Navigate to project's root folder.
 * Run `npm install` to let npm install required Gulp plugins.
