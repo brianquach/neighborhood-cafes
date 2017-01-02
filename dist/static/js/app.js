@@ -30,9 +30,8 @@ var restaurantModel = (function($) {
     }).done(function(data) {
       var restaurants = data.restaurants;
       d.resolve(restaurants);
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-      // TODO: Handle failures
-      // console.log(jqXHR, textStatus, errorThrown);
+    }).fail(function (jqXHR, textStatus) {
+      d.reject(textStatus);
     });
 
     return d;
@@ -53,9 +52,8 @@ var restaurantModel = (function($) {
     }).done(function(data) {
       var reviews = data.user_reviews;
       d.resolve(reviews);
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-      // TODO: Handle failures
-      // console.log(jqXHR, textStatus, errorThrown);
+    }).fail(function (jqXHR, textStatus) {
+      d.reject(textStatus);
     });
 
     return d;
@@ -112,11 +110,12 @@ var mapController = (function($) {
   }
 
   function loadInfoWindowContent(restaurantId, infoWindow) {
+    var $content = $(infoWindow.getContent());
+    var $reviews = $content.find('.info-window__reviews');
+    var contentString = '';
+
     $.when(restaurantModel.getRestaurantReviews(restaurantId)).then(
       function (reviews) {
-        var contentString = '';
-        var $content = $(infoWindow.getContent());
-        var $reviews = $content.find('.info-window__reviews');
         if (reviews.length) {
           var reviewString = '';
           var review = reviews[0].review;
@@ -128,6 +127,13 @@ var mapController = (function($) {
         } else {
           $reviews.replaceWith('<span>No Reviews</span>');
         }
+        contentString = '<div class="info-window">' +
+          $content.html() +
+          '</div>';
+        infoWindow.setContent(contentString);
+      },
+      function (resp) {
+        $reviews.replaceWith('<p class="error-msg show">Restaurant review could not be loaded from Zomato API</p>');
         contentString = '<div class="info-window">' +
           $content.html() +
           '</div>';
@@ -225,16 +231,17 @@ var cafeModule = (function ($) {
     self.mobileMapView = function() {
       self.isMobileListView(false);
     };
+    self.noCafeResults = ko.observable(false);
+    self.noGoogleMaps = ko.observable(false);
   }
 
   function init() {
-    loadRestaurants();
     ko.applyBindings(cafeViewModel);
   }
 
   function loadRestaurants() {
     $.when(restaurantModel.getRestaurants()).then(
-      function (restaurants) {
+      function(restaurants) {
         var restaurant, location, lat, lng, marker;
         var bounds = map.getBounds();
         var markers = [];
@@ -269,12 +276,21 @@ var cafeModule = (function ($) {
         map.fitBounds(bounds);
         mapModel.saveMarkerCluster(markerCluster);
         restaurantModel.saveRestaurants(restaurants);
+      },
+      function(resp) {
+        cafeViewModel.noCafeResults(true);
       }
     );
   }
 
+  function getViewModel() {
+    return cafeViewModel;
+  }
+
   return {
-    init: init
+    init: init,
+    loadRestaurants: loadRestaurants,
+    getViewModel: getViewModel
   };
 })(jQuery);
 

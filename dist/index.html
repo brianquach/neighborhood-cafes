@@ -4,6 +4,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Cafe Map</title>
     <link href="static/css/style.css" rel="stylesheet">
+
+    <script src="static/js/markerclusterer.js" async></script>
   </head>
 
   <body>
@@ -18,19 +20,33 @@
         <input type="text" class="filter__box" data-bind="textInput: query">
       </div>
       <h2>Cafes:</h2>
+      <p class="error-msg" data-bind="css: { show: noGoogleMaps() || noCafeResults() }">
+        Restaurants could not be loaded from Zomato API.
+      </p>
+      <!-- ko if: restaurants().length > 0 -->
       <ul data-bind="foreach: restaurants">
         <li data-bind="click: $parent.restaurantClick, visible: restaurant.show">
           <span data-bind="text: restaurant.name"></span>
         </li>
       </ul>
+      <!-- /ko -->
+      <!-- ko if: restaurants().length === 0 -->
+      <img src="static/images/load.svg" width="50" height="50" alt="loading...">
+      <!-- /ko -->
       <footer>
         Cafe search powered by <a href="https://developers.zomato.com/">Zomato</a>
       </footer>
     </section>
+    <section class="no-map error-msg" data-bind="css: { show: noGoogleMaps() }">
+      Google Maps could not be loaded.
+    </section>
+    <!-- ko if: !noGoogleMaps() -->
     <section id="map" class="map"></section>
+    <!-- /ko -->
 
-    <script src="static/js/knockout.js" defer></script>
-    <script src="static/js/jquery.min.js" defer></script>
+    <script src="static/js/knockout.js"></script>
+    <script src="static/js/jquery.min.js"></script>
+    <script src="static/js/app.js" async></script>
     <script>
       var map;
       var mapState = {
@@ -47,10 +63,16 @@
           disableDefaultUI: true,
           zoomControl: true
         });
+
+        map.addListener('tilesloaded', function() {
+          cafeModule.loadRestaurants();
+        });
       }
+
+      $.getScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyCHWBmrFqFmvke2NWG_ueETDnYeYmlyHWM&callback=initMap')
+        .fail(function (jqXHR, textStatus) {
+          cafeModule.getViewModel().noGoogleMaps(true);
+        });
     </script>
-    <script src="static/js/markerclusterer.js" defer></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHWBmrFqFmvke2NWG_ueETDnYeYmlyHWM&callback=initMap" async defer></script>
-    <script src="static/js/app.js" defer></script>
   </body>
 </html>
