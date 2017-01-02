@@ -122,6 +122,7 @@ body {
   margin: 25px 2px 5px;
 }
 
+/* MEDIA QUERY CSS */
 @media screen and (max-width: 750px) {
   .restaurant-list {
     width: 40%;

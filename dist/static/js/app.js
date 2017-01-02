@@ -1,3 +1,4 @@
+/** Restaurant Model stores and retrieves restaurant data from 3rd-Party API */
 var restaurantModel = (function($) {
   'use strict'
 
@@ -7,6 +8,7 @@ var restaurantModel = (function($) {
 
   var restaurants;
 
+  /** Fetch restaurant data */
   function getRestaurants() {
     var d = $.Deferred();
 
@@ -37,6 +39,9 @@ var restaurantModel = (function($) {
     return d;
   }
 
+  /** Fetch restaurant review data
+   * @param {integer} restaurantId - Id of restaurant to retrieve reviews
+   */
   function getRestaurantReviews(restaurantId) {
     var d = $.Deferred();
 
@@ -59,6 +64,9 @@ var restaurantModel = (function($) {
     return d;
   }
 
+  /** Store restaurants to avoid duplicate API calls
+   * @param {array} unsavedRestaurants - List of restaurants
+   */
   function saveRestaurants(unsavedRestaurants) {
     restaurants = unsavedRestaurants;
   }
@@ -70,20 +78,24 @@ var restaurantModel = (function($) {
   }
 })(jQuery);
 
+/** Map Model holds map data */
 var mapModel = (function($) {
   'use strict'
 
   var markerCluster;
   var infoWindow;
 
+  /** Returns marker cluster object */
   function getMarkerCluster() {
     return markerCluster;
   }
 
+  /** Stores marker cluster object */
   function saveMarkerCluster(unsavedMarkerCluster) {
     markerCluster = unsavedMarkerCluster;
   }
 
+  /** Returns a single instance of an InfoWindow */
   function getInfoWindow() {
     if (!infoWindow) {
       infoWindow = new google.maps.InfoWindow();
@@ -98,9 +110,14 @@ var mapModel = (function($) {
   }
 })();
 
+/** Map Controller applies logic to data */
 var mapController = (function($) {
   'use strict'
 
+  /** Animates map marker for a set amount of time
+   * @param {object} marker - represents a google map marker
+   * @param {number} timeout - represents milliseconds
+   */
   function animateMarker(marker, timeout) {
     timeout = timeout || 1400;
     marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -109,6 +126,10 @@ var mapController = (function($) {
     }, timeout);
   }
 
+  /** Populates an InfowWindow with information about a restaurant
+   * @param {number} restaurantId - id of a restaurant
+   * @param {object} infoWindow - google map infoWindow
+   */
   function loadInfoWindowContent(restaurantId, infoWindow) {
     var $content = $(infoWindow.getContent());
     var $reviews = $content.find('.info-window__reviews');
@@ -142,6 +163,11 @@ var mapController = (function($) {
     );
   }
 
+  /** Adds a google map marker onto the map
+   * @param {number} lat - lattitude map coordinate
+   * @param {number} lng - longitude map coordinate
+   * @param {object} restaurant - restaurant object
+   */
   function addMarker(lat, lng, restaurant) {
     var position = {
       lat: lat,
@@ -185,13 +211,20 @@ var mapController = (function($) {
   };
 })(jQuery);
 
+/** Cafe Module initializes application and holds the app ViewModel */
 var cafeModule = (function ($) {
   'use strict'
 
   var cafeViewModel = new CafeViewModel();
+
+  /** Represents the Cafe application ViewModel
+   * @constructor
+   */
   function CafeViewModel() {
     var self = this;
     self.restaurants = ko.observableArray();
+
+    // Handles restaurants clicked from list view
     self.restaurantClick = function(restaurantObj) {
       if (self.isMobileListView()) {
         self.isMobileListView(false);
@@ -201,6 +234,7 @@ var cafeModule = (function ($) {
 
     self.query = ko.observable();
     self.query.extend({ rateLimit: 200 }); // Imitate debouncing
+    // Filters out restaurant from list view based on filter box input
     self.query.subscribe(function(q) {
       var name, i, len, restaurantObj, restaurant, marker;
       var re = new RegExp(q, 'gi');
@@ -238,10 +272,12 @@ var cafeModule = (function ($) {
     self.noGoogleMaps = ko.observable(false);
   }
 
+  /** Initiate application */
   function init() {
     ko.applyBindings(cafeViewModel);
   }
 
+  /** Load default restaurants */
   function loadRestaurants() {
     $.when(restaurantModel.getRestaurants()).then(
       function(restaurants) {
@@ -249,6 +285,8 @@ var cafeModule = (function ($) {
         var bounds = map.getBounds();
         var markers = [];
 
+        // Parse restaurant data to create map markers and setup infoWindow
+        // information
         restaurants.forEach(function (restaurantObj, idx) {
           restaurant = restaurantObj.restaurant;
           location = restaurant.location;
@@ -286,6 +324,7 @@ var cafeModule = (function ($) {
     );
   }
 
+  /** return ViewModel */
   function getViewModel() {
     return cafeViewModel;
   }
