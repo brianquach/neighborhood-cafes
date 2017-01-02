@@ -15,7 +15,7 @@
     <button class="mobile-nav__button" data-bind="click: mobileMapView">Map View</button>
   </div>
 
-  <section class="restaurant-list" data-bind="css: { show: isMobileListView }">
+  <section class="restaurant-list" data-bind="css: { show: isMobileListView() }">
     <div class="filter">
       Filter by name:
       <input type="text" class="filter__box" data-bind="textInput: query">

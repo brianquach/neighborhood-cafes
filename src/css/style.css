@@ -18,7 +18,7 @@ body {
   display: none;
 }
 .show {
-  display: block;
+  display: block !important;
 }
 
 /* MOBILE MENU */
