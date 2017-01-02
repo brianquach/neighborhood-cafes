@@ -1,0 +1,134 @@
+/* GENERAL */
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+body {
+  display: flex;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+.error-msg {
+  color: red;
+  display: none;
+}
+.show {
+  display: block;
+}
+
+/* MOBILE MENU */
+
+.mobile-nav {
+  position: fixed;
+  width: 100%;
+  height: 60px;
+  background-color: #414a59;
+  display: none;
+  z-index: 1;
+}
+.mobile-nav__button {
+  width: 100%;
+  font-weight: bold;
+  border: 1px solid #000;
+  font-size: 24px;
+  background: inherit;
+}
+
+/* MAP */
+
+.map {
+  height: 100%;
+  width: 75%;
+  display: inline-block;
+}
+.info-window h3 {
+  font-size: 22px;
+  margin-bottom: 5px;
+}
+.info-window p {
+  margin: 0;
+}
+.info-window label {
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 5px;
+  display: inline-block;
+}
+.info-window__currency {
+  color: green;
+}
+
+/* LIST VIEW */
+
+.filter {
+  font-size: 20px;
+  padding: 5px;
+}
+.filter__box {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+}
+.restaurant-list {
+  color: #ddd;
+  background-color: #414a59;
+  width: 25%;
+  height: 100%;
+  overflow-y: scroll;
+  display: inline-block;
+}
+.restaurant-list a {
+  color: #ddd;
+}
+.restaurant-list h2 {
+  padding: 5px;
+  margin: 0;
+}
+.restaurant-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.restaurant-list li {
+  padding: 10px 5px;
+  border-style: dashed;
+  border-color: #ddd;
+  border-width: 1px 0;
+  cursor: pointer;
+}
+.restaurant-list li:hover {
+  background-color: rgba(40, 62, 175, 0.65);
+}
+.restaurant-list footer {
+  margin: 25px 2px 5px;
+}
+
+/* MEDIA QUERY CSS */
+
+@media screen and (max-width: 750px) {
+  .restaurant-list {
+    width: 40%;
+  }
+}
+@media screen and (max-width: 500px) {
+  .restaurant-list {
+    position: absolute;
+    top: 60px;
+    width: 100%;
+    z-index: 1;
+    display: none;
+  }
+  .map {
+    margin-top: 60px;
+    width: 100%;
+  }
+  .mobile-nav {
+    display: flex;
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "neighborhood-api",
+  "version": "1.0.0",
+  "description": "Using [Google Maps](https://developers.google.com/maps/) and [Zomato](https://developers.zomato.com/) API, Cafe Finder displays popular cafes around the Los Angeles area. Features include: * Google map * Cafe filter * Cafe information (cost, reviews, and address) * API Error handling * Responsive layout",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brianquach/neighborhood-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brianquach/neighborhood-api/issues"
+  },
+  "homepage": "https://github.com/brianquach/neighborhood-api#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^2.3.2",
+    "gulp-minify": "0.0.14"
+  }
+}
