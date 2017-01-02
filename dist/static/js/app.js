@@ -1,6 +1,6 @@
 /** Restaurant Model stores and retrieves restaurant data from 3rd-Party API */
 var restaurantModel = (function($) {
-  'use strict'
+  'use strict';
 
   var headers = {
     "user-key": '3dcc424e9b2d38abdfd2d55ae0c36d06'
@@ -21,7 +21,7 @@ var restaurantModel = (function($) {
       lon: mapState.lng,
       q: 'cafe',
       count: 15,
-      radius: 8050  // unit in meters; ~5 miles
+      radius: 8050 // unit in meters; ~5 miles
     });
     var url = 'https://developers.zomato.com/api/v2.1/search';
 
@@ -32,7 +32,7 @@ var restaurantModel = (function($) {
     }).done(function(data) {
       var restaurants = data.restaurants;
       d.resolve(restaurants);
-    }).fail(function (jqXHR, textStatus) {
+    }).fail(function(jqXHR, textStatus) {
       d.reject(textStatus);
     });
 
@@ -57,7 +57,7 @@ var restaurantModel = (function($) {
     }).done(function(data) {
       var reviews = data.user_reviews;
       d.resolve(reviews);
-    }).fail(function (jqXHR, textStatus) {
+    }).fail(function(jqXHR, textStatus) {
       d.reject(textStatus);
     });
 
@@ -80,7 +80,7 @@ var restaurantModel = (function($) {
 
 /** Map Model holds map data */
 var mapModel = (function($) {
-  'use strict'
+  'use strict';
 
   var markerCluster;
   var infoWindow;
@@ -112,7 +112,7 @@ var mapModel = (function($) {
 
 /** Map Controller applies logic to data */
 var mapController = (function($) {
-  'use strict'
+  'use strict';
 
   /** Animates map marker for a set amount of time
    * @param {object} marker - represents a google map marker
@@ -136,7 +136,8 @@ var mapController = (function($) {
     var contentString = '';
 
     $.when(restaurantModel.getRestaurantReviews(restaurantId)).then(
-      function (reviews) {
+
+      function(reviews) {
         if (reviews.length) {
           var reviewString = '';
           var review = reviews[0].review;
@@ -153,7 +154,7 @@ var mapController = (function($) {
           '</div>';
         infoWindow.setContent(contentString);
       },
-      function (resp) {
+      function(resp) {
         $reviews.replaceWith('<p class="error-msg show">Restaurant review could not be loaded from Zomato API</p>');
         contentString = '<div class="info-window">' +
           $content.html() +
@@ -212,8 +213,8 @@ var mapController = (function($) {
 })(jQuery);
 
 /** Cafe Module initializes application and holds the app ViewModel */
-var cafeModule = (function ($) {
-  'use strict'
+var cafeModule = (function($) {
+  'use strict';
 
   var cafeViewModel = new CafeViewModel();
 
@@ -233,7 +234,9 @@ var cafeModule = (function ($) {
     };
 
     self.query = ko.observable();
-    self.query.extend({ rateLimit: 200 }); // Imitate debouncing
+    self.query.extend({
+      rateLimit: 200
+    }); // Imitate debouncing
     // Filters out restaurant from list view based on filter box input
     self.query.subscribe(function(q) {
       var name, i, len, restaurantObj, restaurant, marker;
@@ -280,6 +283,7 @@ var cafeModule = (function ($) {
   /** Load default restaurants */
   function loadRestaurants() {
     $.when(restaurantModel.getRestaurants()).then(
+
       function(restaurants) {
         var restaurant, location, lat, lng, marker;
         var bounds = map.getBounds();
@@ -287,7 +291,7 @@ var cafeModule = (function ($) {
 
         // Parse restaurant data to create map markers and setup infoWindow
         // information
-        restaurants.forEach(function (restaurantObj, idx) {
+        restaurants.forEach(function(restaurantObj, idx) {
           restaurant = restaurantObj.restaurant;
           location = restaurant.location;
           lat = location.latitude;
@@ -311,8 +315,9 @@ var cafeModule = (function ($) {
 
         var markerCluster = new MarkerClusterer(
           map,
-          markers,
-          {imagePath: './static/images/m'}
+          markers, {
+            imagePath: './static/images/m'
+          }
         );
         map.fitBounds(bounds);
         mapModel.saveMarkerCluster(markerCluster);

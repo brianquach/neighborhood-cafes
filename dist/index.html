@@ -1,78 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cafe Map</title>
-    <link href="static/css/style.css" rel="stylesheet">
 
-    <script src="static/js/markerclusterer.js" async></script>
-  </head>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cafe Map</title>
+  <link href="static/css/style.css" rel="stylesheet">
 
-  <body>
-    <div class="mobile-nav">
-      <button class="mobile-nav__button" data-bind="click: mobileListView">List View</button>
-      <button class="mobile-nav__button" data-bind="click: mobileMapView">Map View</button>
+  <script src="static/js/markerclusterer.js" async></script>
+</head>
+
+<body>
+  <div class="mobile-nav">
+    <button class="mobile-nav__button" data-bind="click: mobileListView">List View</button>
+    <button class="mobile-nav__button" data-bind="click: mobileMapView">Map View</button>
+  </div>
+
+  <section class="restaurant-list" data-bind="css: { show: isMobileListView }">
+    <div class="filter">
+      Filter by name:
+      <input type="text" class="filter__box" data-bind="textInput: query">
     </div>
-
-    <section class="restaurant-list" data-bind="css: { show: isMobileListView }">
-      <div class="filter">
-        Filter by name:
-        <input type="text" class="filter__box" data-bind="textInput: query">
-      </div>
-      <h2>Cafes:</h2>
-      <p class="error-msg" data-bind="css: { show: noGoogleMaps() || noCafeResults() }">
-        Restaurants could not be loaded from Zomato API.
-      </p>
-      <!-- ko if: restaurants().length > 0 -->
-      <ul data-bind="foreach: restaurants">
-        <li data-bind="click: $parent.restaurantClick, visible: restaurant.show">
-          <span data-bind="text: restaurant.name"></span>
-        </li>
-      </ul>
-      <!-- /ko -->
-      <!-- ko if: restaurants().length === 0 -->
-      <img src="static/images/load.svg" width="50" height="50" alt="loading...">
-      <!-- /ko -->
-      <footer>
-        Cafe search powered by <a href="https://developers.zomato.com/">Zomato</a>
-      </footer>
-    </section>
-    <section class="no-map error-msg" data-bind="css: { show: noGoogleMaps() }">
-      Google Maps could not be loaded.
-    </section>
-    <!-- ko if: !noGoogleMaps() -->
-    <section id="map" class="map"></section>
+    <h2>Cafes:</h2>
+    <p class="error-msg" data-bind="css: { show: noGoogleMaps() || noCafeResults() }">
+      Restaurants could not be loaded from Zomato API.
+    </p>
+    <!-- ko if: restaurants().length > 0 -->
+    <ul data-bind="foreach: restaurants">
+      <li data-bind="click: $parent.restaurantClick, visible: restaurant.show">
+        <span data-bind="text: restaurant.name"></span>
+      </li>
+    </ul>
     <!-- /ko -->
+    <!-- ko if: restaurants().length === 0 -->
+    <img src="static/images/load.svg" width="50" height="50" alt="loading...">
+    <!-- /ko -->
+    <footer>
+      Cafe search powered by <a href="https://developers.zomato.com/">Zomato</a>
+    </footer>
+  </section>
+  <section class="no-map error-msg" data-bind="css: { show: noGoogleMaps() }">
+    Google Maps could not be loaded.
+  </section>
+  <!-- ko if: !noGoogleMaps() -->
+  <section id="map" class="map"></section>
+  <!-- /ko -->
 
-    <script src="static/js/knockout.js"></script>
-    <script src="static/js/jquery.min.js"></script>
-    <script src="static/js/app.js" async></script>
-    <script>
-      var map;
-      var mapState = {
-        lat: 34.052235,
-        lng: -118.243683
-      };
-      function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: {
-            lat: mapState.lat,
-            lng: mapState.lng
-          },
-          zoom: 15,
-          disableDefaultUI: true,
-          zoomControl: true
-        });
+  <script src="static/js/knockout.js"></script>
+  <script src="static/js/jquery.min.js"></script>
+  <script src="static/js/app.js" async></script>
+  <script>
+    var map;
+    var mapState = {
+      lat: 34.052235,
+      lng: -118.243683
+    };
 
-        google.maps.event.addListenerOnce(map, 'tilesloaded', function() {
-          cafeModule.loadRestaurants();
-        });
-      }
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: {
+          lat: mapState.lat,
+          lng: mapState.lng
+        },
+        zoom: 15,
+        disableDefaultUI: true,
+        zoomControl: true
+      });
 
-      $.getScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyCHWBmrFqFmvke2NWG_ueETDnYeYmlyHWM&callback=initMap')
-        .fail(function (jqXHR, textStatus) {
-          cafeModule.getViewModel().noGoogleMaps(true);
-        });
-    </script>
-  </body>
+      google.maps.event.addListenerOnce(map, 'tilesloaded', function() {
+        cafeModule.loadRestaurants();
+      });
+    }
+
+    $.getScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyCHWBmrFqFmvke2NWG_ueETDnYeYmlyHWM&callback=initMap')
+      .fail(function(jqXHR, textStatus) {
+        cafeModule.getViewModel().noGoogleMaps(true);
+      });
+  </script>
+</body>
+
 </html>
