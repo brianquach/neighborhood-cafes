@@ -64,7 +64,7 @@
           zoomControl: true
         });
 
-        map.addListener('tilesloaded', function() {
+        google.maps.event.addListenerOnce(map, 'tilesloaded', function() {
           cafeModule.loadRestaurants();
         });
       }

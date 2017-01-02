@@ -206,6 +206,9 @@ var cafeModule = (function ($) {
       var re = new RegExp(q, 'gi');
 
       var markerCluster = mapModel.getMarkerCluster();
+      if (!markerCluster) {
+        return;
+      }
       markerCluster.clearMarkers();
 
       for (i = 0, len = self.restaurants().length; i < len; i++) {
