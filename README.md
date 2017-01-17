@@ -1,4 +1,4 @@
-# Cafe Finder
+# Neighborhood Cafes
 Using [Google Maps](https://developers.google.com/maps/) and [Zomato](https://developers.zomato.com/) API, Cafe Finder displays popular cafes around the Los Angeles area. Features include:
 * Google map
 * Cafe filter
